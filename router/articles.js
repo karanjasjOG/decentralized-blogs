@@ -1,11 +1,39 @@
 router = require('express')();
 const Article = require('./../models/article.js');
+
+router.get('/test2', (req, res) => {
+
+    res.send('<!doctype html><html><head><meta charset="utf-8" /><title>Marked in the browser</title></head><body><div id="content"></div><h1>jiji</h1><script>window.alert("sometext")</script></body></html>')
+})
+
+router.get('/edit/:id', async (req, res) => {
+    const article = await Article.findById(req.params.id)
+
+    res.render('articles/edit.ejs', { article: article })
+})
+
+router.post('/edit/:id', async (req, res) => {
+
+    try {
+        let editArticle = await Article.findById(req.params.id);
+        editArticle.title = req.body.title
+        editArticle.description = req.body.description
+        editArticle.markdown = req.body.markdown
+        await editArticle.save()
+        res.redirect(`/articles/${editArticle.slug}`)
+
+    } catch (e) {
+        console.log(e)
+        res.render('articles/edit.ejs', { article: editArticle })
+    }
+})
+
 router.get('/basic/', async (req, res) => {
 
     const articles = await Article.find().sort({ createdAt: 'desc' });
 
 
-    // console.log(articles);
+
 
     res.render('articles/index.ejs', { articles: articles });
 })
@@ -16,7 +44,7 @@ router.get('/new/', async (req, res) => {
     res.render('articles/new.ejs', { article: new Article() });
 })
 router.get('/:slug', async (req, res) => {
-    // console.log(5)
+
     const article = await Article.findOne({ slug: req.params.slug })
     if (article == null) res.redirect('/')
 
@@ -33,19 +61,18 @@ router.post('/', async (req, res) => {
         description: req.body.description,
         markdown: req.body.markdown,
     })
-    // console.log(1)
+
     try {
-        console.log(2)
+
         article = await article.save();
-        console.log(7)
+
         res.redirect(`/articles/${article.slug}`)
 
     } catch (e) {
-        console.log(3)
-        console.log(e)
+
         res.render('articles/new.ejs', { article: article })
     }
-    // console.log(4)
+
 })
 
 
@@ -59,5 +86,7 @@ router.delete('/:id', async (req, res) => {
 router.post('/test', (req, res) => {
     res.redirect('/articles')
 })
+
+
 
 module.exports = router;
