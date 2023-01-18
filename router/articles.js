@@ -1,10 +1,9 @@
-router = require('express')();
+router = require('express').Router();
+
 const Article = require('./../models/article.js');
 
-router.get('/test2', (req, res) => {
 
-    res.send('<!doctype html><html><head><meta charset="utf-8" /><title>Marked in the browser</title></head><body><div id="content"></div><h1>jiji</h1><script>window.alert("sometext")</script></body></html>')
-})
+
 
 router.get('/edit/:id', async (req, res) => {
     const article = await Article.findById(req.params.id)
@@ -30,6 +29,8 @@ router.post('/edit/:id', async (req, res) => {
 
 router.get('/basic/', async (req, res) => {
 
+    // let user = await Users.findOne({ username: req.cookies.username })
+
     const articles = await Article.find().sort({ createdAt: 'desc' });
 
 
@@ -51,7 +52,8 @@ router.get('/:slug', async (req, res) => {
     res.render('articles/show.ejs', { article: article })
 })
 router.get('/', (req, res) => {
-    res.redirect('/articles/basic')
+    console.log('over heere')
+    res.redirect('/articles/users/sign-up')
 })
 
 router.post('/', async (req, res) => {

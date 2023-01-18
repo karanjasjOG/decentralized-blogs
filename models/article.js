@@ -51,20 +51,5 @@ articleSchema.pre('validate', function (next) {
     next()
 });
 
-// articleSchema.pre('updateOne', function (next) {
-
-
-//     console.log('maskl')
-//     if (this.markdown) {
-//         console.log('maskl')
-//         this.sanitizedMarkdown = DOMPurify.sanitize(marked.parse(this.markdown))
-//         this.markdown = NodeHtmlMarkdown.translate(this.sanitizedMarkdown)
-
-
-//     }
-
-//     next()
-// });
-
 
 module.exports = mongoose.model('Article', articleSchema);
